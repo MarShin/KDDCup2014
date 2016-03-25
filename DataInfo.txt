@@ -18,3 +18,13 @@ Criteria for 'is_exciting':
   three_or_more_non_teacher_referred_donors = t
   one_non_teacher_referred_donor_giving_100_plus = t
   donation_from_thoughtful_donor = t
+
+  
+				row		col
+  projects: 	664098	35
+  essays:		664098	6
+  resources:	3667217	9
+  
+  donations:	3097989	21
+  outcomes:		619326	12
+  
