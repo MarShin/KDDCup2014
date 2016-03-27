@@ -8,9 +8,9 @@ from sklearn.linear_model import LogisticRegression
 
 # load the data
 print('loading the data...')
-projects = pd.read_csv('./data/projects.csv')
-outcomes = pd.read_csv('./data/outcomes.csv')
-sample = pd.read_csv('./data/sampleSubmission.csv')
+projects = pd.read_csv('../COMP4332_Dataset/projects.csv')
+outcomes = pd.read_csv('../COMP4332_Dataset/outcomes.csv')
+sample = pd.read_csv('../COMP4332_Dataset/sampleSubmission.csv')
 print('complete..')
 
 # sort the data based on id

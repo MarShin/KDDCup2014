@@ -7,6 +7,24 @@
 5_outcomes.csv: outcome info - train
   sampleSubmission.csv
 
+[Tasks]
+1: Arrange by projectsid
+2: Appropriately fill empty fields
+3: Plot Data (Num of is_exciting projects over Time)
+  - Find seasonality
+  - Data before 2010 not useful (Some criteria not kept track before 2010)
+  -
+4: Make additional useful attributes
+  - Essay Length
+  -
+
+5: Use different models (SVM, RandomTree, etc XGBoost)
+
+
+6: Combine models
+
+
+
 Criteria for 'is_exciting':
 
   fully_funded = t
@@ -19,12 +37,36 @@ Criteria for 'is_exciting':
   one_non_teacher_referred_donor_giving_100_plus = t
   donation_from_thoughtful_donor = t
 
-  
+
+  Data Shape: (getDataShape.py)
 				row		col
   projects: 	664098	35
   essays:		664098	6
   resources:	3667217	9
-  
+
   donations:	3097989	21
   outcomes:		619326	12
-  
+
+Empty project fields percentage (x / 664098)*100 :
+
+school_ncesid 6.4351948055859225 %
+school_zip 0.0006023207418182256 %
+school_metro 12.333721830211806 %
+school_district 0.14275001581091948 %
+school_county 0.002559863152727459 %
+teacher_prefix 0.0006023207418182256 %
+primary_focus_subject 0.0058726272327277 %
+primary_focus_area 0.0058726272327277 %
+secondary_focus_subject 31.304566494704094 %
+secondary_focus_area 31.304566494704094 %
+resource_type 0.006776108345455037 %
+grade_level 0.0013552216690910076 %
+fulfillment_labor_materials 5.282654066116748 %
+students_reached 0.021984707076365236 %
+
+Essays:
+empty field percentage:
+title 0.002559863152727459 %
+short_description 0.019876584480001444 %
+need_statement 0.22165403298910702 %
+essay 0.0004517405563636692 %

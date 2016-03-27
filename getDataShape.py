@@ -30,4 +30,4 @@ print 'outcomes', outcomes.shape
 #projects.to_csv('../COMP4332_Dataset/projects_sorted.csv')
 #essays.to_csv('../COMP4332_Dataset/essays_sorted.csv')
 #projects.to_csv('projects_sorted.csv')
-outcomes = outcomes.sort('projectid')
+#outcomes = outcomes.sort('projectid')
