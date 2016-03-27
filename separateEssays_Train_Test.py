@@ -34,8 +34,8 @@ test_idx = np.where(dates >= '2014-01-01')[0]
 #projects_train = pd.DataFrame(columns = list(projects.columns.values))
 #projects_test = pd.DataFrame(columns = list(projects.columns.values))
 
-#essays_train = pd.DataFrame(columns = list(essays.columns.values))
-#essays_test =pd.DataFrame(columns = list(essays.columns.values))
+essays_train = pd.DataFrame(columns = list(essays.columns.values))
+essays_test =pd.DataFrame(columns = list(essays.columns.values))
 
 
 count=0
@@ -50,7 +50,7 @@ for i in test_idx:
     essays_test.loc[count] = essays.loc[i]
     count+=1
     print (count / len(test_idx) *100, "% test_dat done")
-    
+
 essays_train.to_csv('essays_train.csv', index=False)
 essays_test.to_csv('essays_test.csv', index=False)
 
