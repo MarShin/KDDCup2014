@@ -17,13 +17,15 @@
 4: Make additional useful attributes
   - Essay Length
   -
-
 5: Use different models (SVM, RandomTree, etc XGBoost)
-
-
 6: Combine models
 
+Handle Imbalance in classes:
+-resampling
+-penalized models (penalized-SVM, penalized-LDA)
+-For Random Forest: Balanced Random Forest(BRF), Weighted random forest(WRF)
 
+2010-04-14: No exciting projects prior to that. (Some factors not kept in record)
 
 Criteria for 'is_exciting':
 
@@ -49,7 +51,7 @@ Criteria for 'is_exciting':
 
   Train set: 619326
   Test set: 44772
-
+======================Project===========================
 Empty project fields percentage (x / 664098)*100 :
 
 school_ncesid 6.4351948055859225 %
@@ -67,9 +69,42 @@ grade_level 0.0013552216690910076 %
 fulfillment_labor_materials 5.282654066116748 %
 students_reached 0.021984707076365236 %
 
+
+======================Essays===========================
+
+
 Essays:
 empty field percentage:
 title 0.002559863152727459 %
 short_description 0.019876584480001444 %
 need_statement 0.22165403298910702 %
 essay 0.0004517405563636692 %
+
+
+[Unigram Result]
+title:
+Score: 0.00596086777999
+Confusion matrix:
+[[580557   2059]
+ [ 36594    116]]
+
+
+short_description:
+Score: 0.0178885877784
+Confusion matrix:
+[[576553   6063]
+ [ 36324    386]]
+
+ need_statement:
+ Score: 0.0145946924701
+ Confusion matrix:
+ [[578132   4484]
+  [ 36407    303]]
+
+ essay:
+ Score: 0.0266638354506
+ Confusion matrix:
+ [[572635   9981]
+  [ 36079    631]]
+
+[Bigram Result]

@@ -118,7 +118,9 @@ if __name__ == "__main__":
         [ 0.75177793  0.24822207]]
     '''
     print('Pipelining..')
-    pipeline = Pipeline([ ('vectorizer', CountVectorizer()), ('classifier', MultinomialNB()) ])
+    pipeline = Pipeline([ ('vectorizer', CountVectorizer(ngram_range=(1,2))), ('classifier', MultinomialNB()) ])
+
+    '''
     pipeline.fit(essays_train[train_data].values, essays_train[target_label].values)
 
      k_fold = KFold(n=len(essays_train), n_folds=6)
@@ -148,22 +150,24 @@ if __name__ == "__main__":
     # Confusion matrix:
     # [[21660   178]
     #  [ 3473 30015]]
+    '''
+
     for i in ('title', 'short_description', 'need_statement', 'essay'):
         pipeline.fit(essays_train[i].values, essays_train['is_exciting'].val
         k_fold = KFold(n=len(essays_train), n_folds=6)
-       scores = []
-       confusion = np.array([[0, 0], [0, 0]])
-       for train_indices, test_indices in k_fold:
-           train_text = essays_train.iloc[train_indices][i].values
-           train_y = essays_train.iloc[train_indices]['is_exciting'].va
-           test_text = essays_train.iloc[test_indices][i].values
-           test_y = essays_train.iloc[test_indices]['is_exciting'].valu
-           pipeline.fit(train_text, train_y)
-           predictions = pipeline.predict(test_text)
-           confusion += confusion_matrix(test_y, predictions)
-           score = f1_score(test_y, predictions, pos_label='t')
-           scores.append(score)
-       print(i+': ')
-       print('Score:', sum(scores)/len(scores))
-       print('Confusion matrix:')
-       print(confusion)
+        scores = []
+        confusion = np.array([[0, 0], [0, 0]])
+        for train_indices, test_indices in k_fold:
+            train_text = essays_train.iloc[train_indices][i].values
+            train_y = essays_train.iloc[train_indices]['is_exciting'].va
+            test_text = essays_train.iloc[test_indices][i].values
+            test_y = essays_train.iloc[test_indices]['is_exciting'].valu
+            pipeline.fit(train_text, train_y)
+            predictions = pipeline.predict(test_text)
+            confusion += confusion_matrix(test_y, predictions)
+            score = f1_score(test_y, predictions, pos_label='t')
+            scores.append(score)
+        print(i+': ')
+        print('Score:', sum(scores)/len(scores))
+        print('Confusion matrix:')
+        print(confusion)
