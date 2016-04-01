@@ -40,15 +40,25 @@ if __name__ == "__main__":
     train_idx = np.where(dates < '2014-01-01')[0]
     test_idx = np.where(dates >= '2014-01-01')[0]
 
+    #check missing fields
+    totalCount = essays.shape[0]
+    for i in range(essays.shape[1]):
+        nullcount = essays[essays[essays.columns[i]].isnull()].shape[0]
+        percentage = float(nullcount) / float(totalCount)*100
+        if(percentage>0):
+            print(essays.columns[i],percentage,'%')
+
     # fill missing data with null
+    print("filling missing data..")
     essays = essays.fillna(value='null')
 
     #pre-process text fields (to lowercase, erase whitespace, add length attribute)
+    print("preprocessing text fields..")
     for i in ['title', 'short_description','need_statement', 'essay']:
         essays[i]=essays[i].apply(process_text)
         essays[i+'_length'] = essays[i].apply(get_length)
 
-    #encoding = "ISO-8859-1"
+
     #separate train / test
     essays_train = essays.loc[train_idx]
     essays_test = essays.loc[test_idx]
@@ -59,8 +69,8 @@ if __name__ == "__main__":
 
     #write to file
     print("writing to file..")
-    essays_train.to_csv('essays_train.csv', encode='utf-8', index=False)
-    essays_test.to_csv('essays_test.csv', encode='utf-8', index=False)
+    essays_train.to_csv('essays_train.csv', encoding='utf-8', index=False)
+    essays_test.to_csv('essays_test.csv', encoding='utf-8', index=False)
 
     '''
     #preprocessing the data based on different types of attr
