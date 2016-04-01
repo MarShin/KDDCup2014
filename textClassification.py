@@ -4,7 +4,10 @@ import re
 import pandas as pd
 import numpy as np
 from sklearn.feature_extraction.text import CountVectorizer
-
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.pipeline import Pipeline
+from sklearn.cross_validation import KFold
+from sklearn.metrics import confusion_matrix, f1_score
 
 def process_text(string):
     string = string.lower()
@@ -27,6 +30,7 @@ if __name__ == "__main__":
     print('complete..')
 
     # sort the data based on id
+    print('sorting data according to projectid..')
     projects = projects.sort_values('projectid')
     outcomes = outcomes.sort_values('projectid')
     essays = essays.sort_values('projectid')
@@ -38,6 +42,7 @@ if __name__ == "__main__":
     test_idx = np.where(dates >= '2014-01-01')[0]
 
     #check missing fields
+    print('Empty fields: ')
     totalCount = essays.shape[0]
     for i in range(essays.shape[1]):
         nullcount = essays[essays[essays.columns[i]].isnull()].shape[0]
@@ -70,7 +75,13 @@ if __name__ == "__main__":
     print("Essays_Test: ")
     print(essays_test.head())
 
+    #sort again
+    essays_train = essays_train.sort_values('projectid')
+    essays_test = essays_test.sort_values('projectid')
+
+
     #reset index
+    print('resetting index..')
     essays_train = essays_train.reset_index(drop=True)
     essays_test = essays_test.reset_index(drop=True)
 
@@ -81,13 +92,20 @@ if __name__ == "__main__":
     essays_train = pd.concat([essays_train,labels], axis=1)
 
     #feature extraction using word Counts
-    count_vectorizer = CountVectorizer()
-    counts = count_vectorizer.fit_transform(essays_train['short_description'].values)
+    print('Extracting Features from [text]..')
 
-    from sklearn.naive_bayes import MultinomialNB
+    ############Set Target Train Text #################
+    #title, short_description, need_statement, essay
+    #title_length, short_description_length, need_statement_length, essay_length
+    train_data = 'short_description'
+    target_label = 'is_exciting'
+    ###################################################
+
+    count_vectorizer = CountVectorizer()
+    counts = count_vectorizer.fit_transform(essays_train[train_data].values)
 
     classifier = MultinomialNB()
-    targets = essays_train['is_exciting'].values
+    targets = essays_train[target_label].values
     classifier.fit(counts, targets)
 
     '''##Test Example
@@ -99,69 +117,53 @@ if __name__ == "__main__":
         [[ 0.95173271  0.04826729]
         [ 0.75177793  0.24822207]]
     '''
+    print('Pipelining..')
+    pipeline = Pipeline([ ('vectorizer', CountVectorizer()), ('classifier', MultinomialNB()) ])
+    pipeline.fit(essays_train[train_data].values, essays_train[target_label].values)
 
-    
+     k_fold = KFold(n=len(essays_train), n_folds=6)
+     scores = []
+     confusion = np.array([[0, 0], [0, 0]])
+     for train_indices, test_indices in k_fold:
+        train_text = essays_train.iloc[train_indices][train_data].values
+        train_y = essays_train.iloc[train_indices][target_label].values
 
+        test_text = essays_train.iloc[test_indices][train_data].values
+        test_y = essays_train.iloc[test_indices][target_label].values
 
+        pipeline.fit(train_text, train_y)
+        predictions = pipeline.predict(test_text)
 
+        confusion += confusion_matrix(test_y, predictions)
+        score = f1_score(test_y, predictions, pos_label='t')
+        scores.append(score)
 
-
-    '''
-    #preprocessing the data based on different types of attr
-    essays.columns['short_description']
-    essays['short_description'][0]
-    essays['short_description'][664097]
-    essays['short_description'][664097].split()
-    essays['parsed'][0] = essays['short_description
-    essays['parsed'][0] = essays['short_description'][0].split()
-    essays['new'][0] = essays['short_description'][0].split()
-    essays['parsed_sd'][0] = essays['short_description'][0].split()
-    essays['parsed_sd'] = essays['short_description'].split()
-    essays['parsed_sd'] = essays['short_description']
-    for i in essays['short_description']:
-        essays['parsed_sd'] = i.split()
-
-    for i in range(len(essays['short_description'])):
-        essays['parsed_sd'][i] = essays['short_description'][i].split()
-
-    essays['short_description'][0].split()
-    essays['short_description'][1].split()
-    essays['short_description'][10].split()
-    for i in range(len(essays['short_description'])):
-        print (i)
-        essays['parsed_sd'][i] = essays['short_description'][i].split()
-
-    essays['short_description'][4000].split()
-    essays['short_description'][4000]
-    totalCount = essays.shape[0]
-    for i in range(essays.shape[1]):
-        nullcount = essays[essays[essays.columns[i]].isnull()].shape[0]
-        percentage = float(nullcount)/float(totalCount) *100
-        if(percentage>0):
-            print(essays.columns[i],percentage,'%')
-
-
-    #Predicting
-    train = projects_data[train_idx]
-    test = projects_data[test_idx]
-    print('shape of test', test.shape)
-    clf = LogisticRegression()
-
-
-    clf.fit(train, labels=='t')
-    preds = clf.predict_proba(test)[:,1]
-    # preds = clf.predict(test)
-
-    #Save prediction into a file
-    sample['is_exciting'] = preds
-    sample.to_csv('predictions.csv', index = False)
-
-
-
-    def test():
-        pass
-
-
-    if __name__ == '__main__':
-        test()
-    '''
+    print(train_data+': ')
+    print('Total text classified:', len(essays_train))
+    print('Score:', sum(scores)/len(scores))
+    print('Confusion matrix:')
+    print(confusion)
+    # Total emails classified: 619326
+    # Score: 0.0178885877784
+    # Confusion matrix:
+    # [[21660   178]
+    #  [ 3473 30015]]
+    for i in ('title', 'short_description', 'need_statement', 'essay'):
+        pipeline.fit(essays_train[i].values, essays_train['is_exciting'].val
+        k_fold = KFold(n=len(essays_train), n_folds=6)
+       scores = []
+       confusion = np.array([[0, 0], [0, 0]])
+       for train_indices, test_indices in k_fold:
+           train_text = essays_train.iloc[train_indices][i].values
+           train_y = essays_train.iloc[train_indices]['is_exciting'].va
+           test_text = essays_train.iloc[test_indices][i].values
+           test_y = essays_train.iloc[test_indices]['is_exciting'].valu
+           pipeline.fit(train_text, train_y)
+           predictions = pipeline.predict(test_text)
+           confusion += confusion_matrix(test_y, predictions)
+           score = f1_score(test_y, predictions, pos_label='t')
+           scores.append(score)
+       print(i+': ')
+       print('Score:', sum(scores)/len(scores))
+       print('Confusion matrix:')
+       print(confusion)
