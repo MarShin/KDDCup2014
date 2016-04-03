@@ -8,6 +8,7 @@
   sampleSubmission.csv
 
 [Tasks]
+0: How many 'is_exciting' projects?
 1: Arrange by projectsid
 2: Appropriately fill empty fields / Or drop those fields?
 3: Plot Data (Num of is_exciting projects over Time)
@@ -51,6 +52,22 @@ Criteria for 'is_exciting':
 
   Train set: 619326
   Test set: 44772
+
+======================Outcomes===========================
+Empty:
+
+is_exciting 9.618850988589807 %
+at_least_1_teacher_referred_donor 21.004122794390938 %
+fully_funded 9.618850988589807 %
+at_least_1_green_donation 21.004122794390938 %
+great_chat 9.618850988589807 %
+three_or_more_non_teacher_referred_donors 21.004122794390938 %
+one_non_teacher_referred_donor_giving_100_plus 21.004122794390938 %
+donation_from_thoughtful_donor 21.004122794390938 %
+great_messages_proportion 23.552564017178668 %
+teacher_referred_count 21.004122794390938 %
+non_teacher_referred_count 21.004122794390938 %
+
 ======================Project===========================
 Empty project fields percentage (x / 664098)*100 :
 
@@ -81,7 +98,7 @@ need_statement 0.22165403298910702 %
 essay 0.0004517405563636692 %
 
 
-[Unigram Result]
+[Unigram Result]===================
 title:
 Score: 0.00596086777999
 Confusion matrix:
@@ -107,4 +124,27 @@ Confusion matrix:
  [[572635   9981]
   [ 36079    631]]
 
-[Bigram Result]
+[Bigram Result]====================
+title:
+Score: 0.00250561293097
+Confusion matrix:
+[[581907    709]
+ [ 36663     47]]
+
+short_description:
+Score: 0.00123377694676
+Confusion matrix:
+[[582153    463]
+ [ 36687     23]]
+
+ need_statement:
+ Score: 0.00134675330267
+ Confusion matrix:
+ [[582207    409]
+  [ 36685     25]]
+
+ essay:
+ Score: 0.00064918577082
+ Confusion matrix:
+ [[582425    191]
+  [ 36698     12]]
