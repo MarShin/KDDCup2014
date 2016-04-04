@@ -112,6 +112,7 @@ from sklearn.linear_model import SGDClassifier
 pipeline = Pipeline([ ('tfidf_vectorizer', TfidfVectorizer(max_df=0.99, min_df=0.01, ngram_range=(1, 2), sublinear_tf=True)), ('classifier', SGDClassifier(penalty="l2",loss="log",fit_intercept=True, shuffle=True,n_iter=20, n_jobs=-1,alpha=0.000005))])
 
 for i in ( 'short_description','need_statement', 'essay'):
+
     k_fold = KFold(n=len(essays_train), n_folds=3)
     for train_indices, test_indices in k_fold:
         train_text = essays_train.iloc[train_indices][i].values
@@ -123,9 +124,22 @@ for i in ( 'short_description','need_statement', 'essay'):
         pipeline.fit(train_text, train_y)
 
         predictions = pipeline.predict_proba(test_text)[:,1]
-        print('AUC: '+ str(metrics.roc_auc_score(test_y,predictions)))
+        print(i+'::: AUC: '+ str(metrics.roc_auc_score(test_y,predictions)))
+
     pipeline.fit(essays_train[i].values, essays_train['y'].values)
     essays_train[i+'_proba'] = pipeline.predict_proba(essays_train[i])[:,1]
+
+###############################
+train_predictions = pd.concat([essays_train['short_description_proba'],essays_train['need_statement_proba'],essays_train['essay_proba']], axis=1)
+train_predictions.to_csv('train_predictions.csv',index=False)
+
+##print each col prediction to test_predictions.csv
+for i in ( 'short_description','need_statement', 'essay'):
+        pipeline.fit(essays_train[i].values, essays_train['y'].values)
+        essays_test[i+'_proba'] = pipeline.predict_proba(essays_test[i])[:,1]
+
+test_predictions = pd.concat([essays_test['short_description_proba'],essays_test['need_statement_proba'],essays_test['essay_proba']], axis=1)
+test_predictions.to_csv('test_predictions.csv',index=False)
 
 
 ##TODO Try different classifier: from sklearn.naive_bayes import BernoulliNB

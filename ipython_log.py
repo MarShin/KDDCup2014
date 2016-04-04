@@ -421,3 +421,25 @@ for i in ( 'short_description','need_statement', 'essay'):
         pipeline.fit(essays_train[i].values, essays_train['y'].values)
         essays_train[i+'_proba'] = pipeline.predict_proba(essays_train[i])[:,1]
         
+get_ipython().magic('load temp_load_saveTestPrediction.py')
+# %load temp_load_saveTestPrediction.py
+for i in ( 'short_description','need_statement', 'essay'):
+        pipeline.fit(essays_train[i].values, essays_train['y'].values)
+        test_result[i+'_proba'] = pipeline.predict_proba(essays_test[i])[:,1]
+
+test_predictions = pd.concat([test_result['short_description_proba'],test_result['need_statement_proba'],test_result['essay_proba']], axis=1)
+test_predictions.to_csv('test_predictions.csv',index=False)
+
+get_ipython().magic('load temp_load_saveTestPrediction.py')
+# %load temp_load_saveTestPrediction.py
+for i in ( 'short_description','need_statement', 'essay'):
+        pipeline.fit(essays_train[i].values, essays_train['y'].values)
+        essays_test[i+'_proba'] = pipeline.predict_proba(essays_test[i])[:,1]
+
+test_predictions = pd.concat([essays_test['short_description_proba'],essays_test['need_statement_proba'],essays_test['essay_proba']], axis=1)
+test_predictions.to_csv('test_predictions.csv',index=False)
+
+train_predictions = pd.concat([essays_train['short_description_proba'],essays_train['need_statement_proba'],essays_train['essay_proba']], axis=1) 
+train_predictions.to_csv('train_predictions.csv',index=False)
+train_predictions = pd.concat([essays_train['projectid'],train_predictions],axis=1)
+train_predictions.to_csv('train_predictions.csv',index=False)
